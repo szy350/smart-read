@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muyu的博客</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>Muyu的博客</h1>
+            </div>
+            <nav class="nav">
+                <a href="#" class="nav-link">首页</a>
+                <a href="#" class="nav-link">个人随笔</a>
+                <a href="#" class="nav-link">AI阅读</a>
+            </nav>
+            <div class="header-right">
+                <button class="login-btn">登陆</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Article List -->
+        <div class="article-list">
+            <!-- Article 1 -->
+            <article class="article-item">
+                <div class="article-image">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop" alt="Article 1">
+                </div>
+                <div class="article-content">
+                    <div class="article-header">
+                        <h3 class="article-title">Victal/niinnule Ariste</h3>
+                        <span class="article-date">2021 207</span>
+                    </div>
+                    <p class="article-excerpt">
+                        Thestascies totabine crome deatte raolo, polevtsnity earicatat poiuratiiry aresh tilee Elouniengid chart amr rigtanioneund yearbioggen viiniovet.
+                    </p>
+                    <button class="read-more-btn">Read Moro</button>
+                </div>
+            </article>
+
+            <!-- Article 2 -->
+            <article class="article-item">
+                <div class="article-image">
+                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop" alt="Article 2">
+                </div>
+                <div class="article-content">
+                    <div class="article-header">
+                        <h3 class="article-title">Thee's dilir Dictiurlydergin</h3>
+                        <span class="article-date">2020 207</span>
+                    </div>
+                    <p class="article-excerpt">
+                        Chiese foonc endeante comcivat he tauzsesia sideras con auringoit enty opeercderfee surtinacitas he notay be anebtoncfio am e demiry al remaina.
+                    </p>
+                    <button class="read-more-btn">Read Moro</button>
+                </div>
+            </article>
+
+            <!-- Article 3 -->
+            <article class="article-item">
+                <div class="article-image">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=200&fit=crop" alt="Article 3">
+                </div>
+                <div class="article-content">
+                    <div class="article-header">
+                        <h3 class="article-title">The falolk Untuor Wrermed Beene</h3>
+                        <span class="article-date">2022-08</span>
+                    </div>
+                    <p class="article-excerpt">
+                        Thesecridelimigmateillanate toetans Mioturtroomts com isa it eext dvartpion t.initetes corininale et ecmpiuterin ottono and bad or yn to uti perthein.
+                    </p>
+                    <button class="read-more-btn">Read Moro</button>
+                </div>
+            </article>
+
+            <!-- Article 4 -->
+            <article class="article-item">
+                <div class="article-image">
+                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=200&fit=crop" alt="Article 4">
+                </div>
+                <div class="article-content">
+                    <div class="article-header">
+                        <h3 class="article-title">Chentailtet and Diesery Beother</h3>
+                        <span class="article-date">2020 2 07</span>
+                    </div>
+                    <p class="article-excerpt">
+                        Tore beties teeolos cand wortret opeens bondios, aravo dušojomiom tret saandriaent be- nasiecteerdbrotch to niets for the stresiayn a oped belo gore.
+                    </p>
+                    <button class="read-more-btn">Read Moro</button>
+                </div>
+            </article>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <button class="page-btn prev-btn" disabled>上一页</button>
+            <div class="page-numbers">
+                <button class="page-btn page-number active">1</button>
+                <button class="page-btn page-number">2</button>
+                <button class="page-btn page-number">3</button>
+                <button class="page-btn page-number">4</button>
+                <button class="page-btn page-number">5</button>
+            </div>
+            <button class="page-btn next-btn">下一页</button>
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>用户登录</h2>
+                <button class="close-btn" id="closeLoginModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="login-form">
+                    <div class="form-group">
+                        <label for="loginUsername">用户名</label>
+                        <input type="text" id="loginUsername" name="username" placeholder="请输入用户名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">密码</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="loginPassword" name="password" placeholder="请输入密码" required>
+                            <span class="password-toggle" id="loginPasswordToggle"></span>
+                        </div>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="remember">
+                            <span>记住我</span>
+                        </label>
+                        <a href="#" class="forgot-password">忘记密码？</a>
+                    </div>
+                    <button type="submit" class="login-submit-btn">登录</button>
+                </form>
+                <div class="login-footer">
+                    <p>还没有账号？<a href="#" class="register-link">立即注册</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal-content register-modal-content">
+            <div class="modal-header">
+                <h2>用户注册</h2>
+                <button class="close-btn" id="closeRegisterModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="register-form">
+                    <div class="form-group">
+                        <label for="registerUsername">用户名</label>
+                        <input type="text" id="registerUsername" name="username" placeholder="请输入用户名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">邮箱</label>
+                        <input type="email" id="registerEmail" name="email" placeholder="请输入邮箱" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">密码</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="registerPassword" name="password" placeholder="请输入密码" required>
+                            <span class="password-toggle" id="registerPasswordToggle"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">确认密码</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="请再次输入密码" required>
+                            <span class="password-toggle" id="confirmPasswordToggle"></span>
+                        </div>
+                    </div>
+                    <div class="form-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="agreeTerms" required>
+                            <span>我已阅读并同意<a href="#" class="terms-link" id="showTerms">用户协议</a></span>
+                        </label>
+                    </div>
+                    <button type="submit" class="register-submit-btn">注册</button>
+                </form>
+                <div class="register-footer">
+                    <p>已有账号？<a href="#" class="login-link">立即登录</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terms Modal -->
+    <div class="modal-overlay" id="termsModal">
+        <div class="modal-content terms-modal-content">
+            <div class="modal-header">
+                <h2>用户协议</h2>
+                <button class="close-btn" id="closeTermsModal">&times;</button>
+            </div>
+            <div class="modal-body terms-body">
+                <div class="terms-content">
+                    <p class="terms-intro">欢迎使用。本协议是您与我方之间就使用博客服务及评论功能所订立的约定。请您在使用前仔细阅读，一旦您发表评论或使用本博客服务，即视为您已接受本协议全部内容。</p>
+                    
+                    <h3>一、服务范围</h3>
+                    <ul>
+                        <li>本博客主要提供个人原创内容展示服务，同时开放用户评论功能，允许用户在文章下方发表合法、合规的评论。</li>
+                        <li>您使用本博客服务时，应遵守国家法律法规及本协议约定，不得利用评论功能从事违法违规活动。</li>
+                    </ul>
+                    
+                    <h3>二、用户评论规则</h3>
+                    <p>您保证发表的评论内容为本人真实意思表示，且不包含以下信息：</p>
+                    <ul>
+                        <li>违反国家法律法规、损害国家利益、破坏民族团结的内容；</li>
+                        <li>涉及色情、暴力、恐怖、赌博、迷信等违背公序良俗的内容；</li>
+                        <li>侮辱、诽谤、恐吓他人，侵犯他人姓名权、肖像权、名誉权、隐私权等合法权益的内容；</li>
+                        <li>含有病毒链接、恶意广告、垃圾信息等干扰博客正常运营的内容；</li>
+                        <li>其他我方认为不适宜发布的内容。</li>
+                    </ul>
+                    <p>您对自己发表的评论内容承担全部法律责任。若因您的评论侵犯第三方合法权益或违反法律法规，您应自行承担相应责任，若因此导致我方被追责，您需赔偿我方全部损失（包括但不限于罚款、律师费、诉讼费等）。</p>
+                    <p>我方有权对评论内容进行审核，对违反本协议或相关规定的评论，有权采取删除、屏蔽等措施，且无需提前通知您。</p>
+                    
+                    <h3>三、知识产权</h3>
+                    <ul>
+                        <li>本博客内的原创文章、图片、视频等内容（除用户评论外），知识产权归我方所有。未经我方书面许可，任何人不得擅自复制、转载、传播、改编或用于商业用途。</li>
+                        <li>您发表的评论内容，知识产权归您所有，但您授予我方一项免费、非独占的使用权，允许我方在本博客范围内展示、存储该评论，无需另行支付费用。</li>
+                    </ul>
+                    
+                    <h3>四、免责声明</h3>
+                    <ul>
+                        <li>本博客内容仅为个人观点分享，不构成任何专业建议（如法律、医疗、投资等），您据此作出的决策，我方不承担责任。</li>
+                        <li>我方对用户评论的真实性、准确性不承担保证责任，评论内容仅代表用户个人观点，与我方立场无关。</li>
+                        <li>因不可抗力（如网络故障、系统维护、政策调整等）导致博客服务暂时中断或评论数据丢失，我方已尽合理努力避免的，不承担赔偿责任。</li>
+                    </ul>
+                    
+                    <h3>五、协议变更与终止</h3>
+                    <ul>
+                        <li>我方有权根据实际情况修订本协议，修订后将在博客首页公告，公告发布后您继续使用服务即视为接受修订内容。</li>
+                        <li>若您违反本协议，我方有权限制您的评论功能或禁止您使用本博客服务，且无需承担责任。</li>
+                        <li>本协议自您首次使用本博客服务之日起生效，终止使用服务后，本协议中关于知识产权、免责声明的条款仍继续有效。</li>
+                    </ul>
+                    
+                    <p class="terms-contact">如有疑问，可通过【联系邮箱：1434130044@qq.com】与我方沟通。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Watermark -->
+    <div class="watermark">豆包AI生成</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
