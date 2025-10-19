@@ -82,6 +82,25 @@ body {
     background-color: #333;
 }
 
+/* 登录后的用户名样式 */
+.login-btn.logged-in {
+    background-color: transparent;
+    color: #333;
+    font-weight: 500;
+    border: none;
+    padding: 10px 0;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+}
+
+.login-btn.logged-in:hover {
+    background-color: transparent;
+    color: #666;
+    border-bottom: 1px solid #666;
+}
+
 /* Main content */
 .main-content {
     max-width: 1200px;
