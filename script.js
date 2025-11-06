@@ -560,3 +560,442 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化字段焦点事件
     initFieldFocusEvents();
 });
+
+// 文章列表功能
+document.addEventListener('DOMContentLoaded', function() {
+    const API_BASE_URL = 'http://127.0.0.1:8080';
+    const articleList = document.getElementById('articleList');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const paginationContainer = document.getElementById('paginationContainer');
+    const pageNumbers = document.getElementById('pageNumbers');
+    
+    // 当前分页状态
+    let currentPage = 1;
+    const pageSize = 5; // 每页显示5篇文章
+    let totalPages = 1;
+    
+    // 初始化：先获取文章总数，再加载第一页文章
+    initArticleList();
+    
+    // 初始化文章列表
+    async function initArticleList() {
+        try {
+            // 先获取文章总数
+            await loadArticleCount();
+            // 再加载第一页文章
+            loadArticles(currentPage);
+        } catch (error) {
+            console.error('初始化失败:', error);
+            showError('初始化失败，请刷新页面重试');
+        }
+    }
+    
+    // 获取文章总数
+    function loadArticleCount() {
+        return fetch(`${API_BASE_URL}/article/count`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('文章总数响应数据:', data);
+            
+            // 检查响应码
+            if (data.code === "0" || data.code === "200") {
+                // 解析返回的数据
+                let count = 0;
+                if (data.data) {
+                    try {
+                        count = typeof data.data === 'string' 
+                            ? parseInt(data.data) 
+                            : data.data;
+                    } catch (e) {
+                        console.error('解析文章总数失败:', e);
+                        count = 0;
+                    }
+                }
+                
+                // 计算总页数
+                totalPages = Math.max(1, Math.ceil(count / pageSize));
+                console.log(`文章总数: ${count}, 总页数: ${totalPages}`);
+            } else {
+                throw new Error(data.message || '获取文章总数失败');
+            }
+        })
+        .catch(error => {
+            console.error('获取文章总数失败:', error);
+            // 如果获取总数失败，仍然尝试加载文章，使用原来的逻辑
+            totalPages = 1;
+        });
+    }
+    
+    // 加载文章列表
+    function loadArticles(pageNum) {
+        // 显示加载状态
+        showLoading();
+        
+        // 发送请求获取文章列表
+        fetch(`${API_BASE_URL}/article/list`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                pageNum: pageNum,
+                pageSize: pageSize
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('文章列表响应数据:', data);
+            
+            // 检查响应码（接口返回"0"表示成功，"200"也表示成功）
+            if (data.code === "0" || data.code === "200") {
+                // 解析返回的数据
+                let articles = [];
+                if (data.data) {
+                    try {
+                        // data字段是字符串形式的JSON，需要解析
+                        articles = typeof data.data === 'string' 
+                            ? JSON.parse(data.data) 
+                            : data.data;
+                    } catch (e) {
+                        console.error('解析文章数据失败:', e);
+                        articles = [];
+                    }
+                }
+                
+                // 渲染文章列表
+                renderArticles(articles);
+                
+                // 更新分页控件（总页数已经在初始化时通过总数接口获取）
+                updatePagination();
+            } else {
+                throw new Error(data.message || '获取文章列表失败');
+            }
+        })
+        .catch(error => {
+            console.error('加载文章失败:', error);
+            showError(error.message || '加载文章失败，请稍后重试');
+        });
+    }
+    
+    // 渲染文章列表
+    function renderArticles(articles) {
+        // 清空现有文章内容（但保留loadingIndicator的结构）
+        // 移除所有文章项、错误消息和空状态
+        const itemsToRemove = articleList.querySelectorAll('.article-item, .error-message, .empty-state');
+        itemsToRemove.forEach(item => item.remove());
+        
+        // 隐藏加载状态
+        hideLoading();
+        
+        // 如果没有文章，显示空状态
+        if (!articles || articles.length === 0) {
+            showEmptyState();
+            return;
+        }
+        
+        // 创建文章HTML
+        articles.forEach((article, index) => {
+            const articleElement = createArticleElement(article);
+            articleList.appendChild(articleElement);
+        });
+    }
+    
+    // 创建单篇文章HTML
+    function createArticleElement(article) {
+        const articleItem = document.createElement('article');
+        articleItem.className = 'article-item';
+        
+        // 格式化日期
+        const formattedDate = formatDate(article.createTime || article.updateTime);
+        
+        // 构建HTML
+        articleItem.innerHTML = `
+            <div class="article-image">
+                <img src="${article.cover || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop'}" 
+                     alt="${article.title || '文章'}">
+            </div>
+            <div class="article-content">
+                <div class="article-header">
+                    <h3 class="article-title">${article.title || '无标题'}</h3>
+                    <span class="article-date">${formattedDate}</span>
+                </div>
+                <p class="article-excerpt">
+                    ${article.summary || article.content || '暂无摘要'}
+                </p>
+                <button class="read-more-btn" data-article-id="${article.id || ''}">Read More</button>
+            </div>
+        `;
+        
+        // 为Read More按钮添加点击事件
+        const readMoreBtn = articleItem.querySelector('.read-more-btn');
+        readMoreBtn.addEventListener('click', function() {
+            showArticleDetail(article);
+        });
+        
+        return articleItem;
+    }
+    
+    // 格式化日期
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        } catch (e) {
+            return dateString;
+        }
+    }
+    
+    // 显示加载状态
+    function showLoading() {
+        loadingIndicator.classList.remove('hidden');
+        paginationContainer.style.display = 'none';
+    }
+    
+    // 隐藏加载状态
+    function hideLoading() {
+        loadingIndicator.classList.add('hidden');
+        paginationContainer.style.display = 'flex';
+    }
+    
+    // 显示错误状态
+    function showError(message) {
+        hideLoading();
+        
+        // 移除现有的错误消息
+        const existingError = articleList.querySelector('.error-message');
+        if (existingError) {
+            existingError.remove();
+        }
+        
+        // 创建错误消息
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.innerHTML = `
+            <p>${message}</p>
+            <button class="error-retry-btn" onclick="location.reload()">重试</button>
+        `;
+        
+        articleList.appendChild(errorDiv);
+    }
+    
+    // 显示空状态
+    function showEmptyState() {
+        const emptyDiv = document.createElement('div');
+        emptyDiv.className = 'empty-state';
+        emptyDiv.innerHTML = '<p>暂无文章</p>';
+        articleList.appendChild(emptyDiv);
+        
+        paginationContainer.style.display = 'none';
+    }
+    
+    // 更新分页控件
+    function updatePagination() {
+        // 清空页码按钮
+        pageNumbers.innerHTML = '';
+        
+        // 生成所有页码按钮（1, 2, 3...格式）
+        for (let i = 1; i <= totalPages; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `page-btn page-number ${i === currentPage ? 'active' : ''}`;
+            pageBtn.textContent = i;
+            pageBtn.addEventListener('click', () => {
+                currentPage = i;
+                loadArticles(currentPage);
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            pageNumbers.appendChild(pageBtn);
+        }
+    }
+});
+
+// 文章详情功能
+document.addEventListener('DOMContentLoaded', function() {
+    const API_BASE_URL = 'http://127.0.0.1:8080';
+    const articleDetailModal = document.getElementById('articleDetailModal');
+    const closeArticleDetailBtn = document.getElementById('closeArticleDetailModal');
+    const articleDetailTitle = document.getElementById('articleDetailTitle');
+    const articleDetailContent = document.getElementById('articleDetailContent');
+    
+    // 显示文章详情
+    window.showArticleDetail = function(article) {
+        // 设置标题
+        articleDetailTitle.textContent = article.title || '文章详情';
+        
+        // 显示加载状态
+        articleDetailContent.innerHTML = `
+            <div class="article-detail-loading">
+                <div class="loading-spinner"></div>
+                <p>加载中...</p>
+            </div>
+        `;
+        
+        // 打开模态框
+        articleDetailModal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        
+        // 如果文章有完整内容，直接显示
+        if (article.content) {
+            renderArticleDetail(article);
+        } else if (article.id) {
+            // 如果有ID，尝试从API获取详细内容
+            loadArticleDetail(article.id);
+        } else {
+            // 如果没有内容也没有ID，显示可用信息
+            renderArticleDetail(article);
+        }
+    };
+    
+    // 从API加载文章详情
+    function loadArticleDetail(articleId) {
+        // 尝试调用文章详情API（如果后端支持）
+        fetch(`${API_BASE_URL}/article/detail`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id: articleId
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.code === "0" || data.code === "200") {
+                let articleData = null;
+                if (data.data) {
+                    try {
+                        articleData = typeof data.data === 'string' 
+                            ? JSON.parse(data.data) 
+                            : data.data;
+                    } catch (e) {
+                        console.error('解析文章详情失败:', e);
+                    }
+                }
+                if (articleData) {
+                    renderArticleDetail(articleData);
+                } else {
+                    throw new Error('无法获取文章详情');
+                }
+            } else {
+                throw new Error(data.message || '获取文章详情失败');
+            }
+        })
+        .catch(error => {
+            console.error('加载文章详情失败:', error);
+            // 如果API调用失败，尝试使用列表中的信息
+            articleDetailContent.innerHTML = `
+                <div class="article-detail-error">
+                    <p>无法加载文章详情，请稍后重试</p>
+                </div>
+            `;
+        });
+    }
+    
+    // 渲染文章详情
+    function renderArticleDetail(article) {
+        const formattedDate = formatArticleDate(article.createTime || article.updateTime);
+        
+        articleDetailContent.innerHTML = `
+            <div class="article-detail-header">
+                <div class="article-detail-meta">
+                    <span class="article-detail-date">${formattedDate}</span>
+                    ${article.author ? `<span class="article-detail-author">作者：${article.author}</span>` : ''}
+                    ${article.category ? `<span class="article-detail-category">分类：${article.category}</span>` : ''}
+                </div>
+                ${article.cover ? `<div class="article-detail-cover">
+                    <img src="${article.cover}" alt="${article.title || '文章封面'}">
+                </div>` : ''}
+            </div>
+            <div class="article-detail-text">
+                ${formatArticleContent(article.content || article.summary || '暂无内容')}
+            </div>
+        `;
+    }
+    
+    // 格式化文章日期
+    function formatArticleDate(dateString) {
+        if (!dateString) return '';
+        
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (e) {
+            return dateString;
+        }
+    }
+    
+    // 格式化文章内容（支持换行）
+    function formatArticleContent(content) {
+        if (!content) return '<p>暂无内容</p>';
+        
+        // 将换行符转换为<br>标签
+        const formatted = content
+            .replace(/\n/g, '<br>')
+            .replace(/\r\n/g, '<br>');
+        
+        // 如果内容没有HTML标签，则包装在<p>标签中
+        if (!formatted.includes('<') && !formatted.includes('>')) {
+            return `<p>${formatted}</p>`;
+        }
+        
+        return formatted;
+    }
+    
+    // 关闭文章详情模态框
+    function closeArticleDetailModal() {
+        articleDetailModal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+    }
+    
+    // 点击关闭按钮
+    closeArticleDetailBtn.addEventListener('click', function() {
+        closeArticleDetailModal();
+    });
+    
+    // 点击遮罩层关闭模态框
+    articleDetailModal.addEventListener('click', function(e) {
+        if (e.target === articleDetailModal) {
+            closeArticleDetailModal();
+        }
+    });
+    
+    // 按ESC键关闭模态框
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && articleDetailModal.classList.contains('show')) {
+            closeArticleDetailModal();
+        }
+    });
+});

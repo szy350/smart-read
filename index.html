@@ -15,7 +15,6 @@
             </div>
             <nav class="nav">
                 <a href="#" class="nav-link">首页</a>
-                <a href="#" class="nav-link">个人随笔</a>
                 <a href="#" class="nav-link">AI阅读</a>
             </nav>
             <div class="header-right">
@@ -27,87 +26,17 @@
     <!-- Main Content -->
     <main class="main-content">
         <!-- Article List -->
-        <div class="article-list">
-            <!-- Article 1 -->
-            <article class="article-item">
-                <div class="article-image">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop" alt="Article 1">
-                </div>
-                <div class="article-content">
-                    <div class="article-header">
-                        <h3 class="article-title">Victal/niinnule Ariste</h3>
-                        <span class="article-date">2021 207</span>
-                    </div>
-                    <p class="article-excerpt">
-                        Thestascies totabine crome deatte raolo, polevtsnity earicatat poiuratiiry aresh tilee Elouniengid chart amr rigtanioneund yearbioggen viiniovet.
-                    </p>
-                    <button class="read-more-btn">Read Moro</button>
-                </div>
-            </article>
-
-            <!-- Article 2 -->
-            <article class="article-item">
-                <div class="article-image">
-                    <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=300&h=200&fit=crop" alt="Article 2">
-                </div>
-                <div class="article-content">
-                    <div class="article-header">
-                        <h3 class="article-title">Thee's dilir Dictiurlydergin</h3>
-                        <span class="article-date">2020 207</span>
-                    </div>
-                    <p class="article-excerpt">
-                        Chiese foonc endeante comcivat he tauzsesia sideras con auringoit enty opeercderfee surtinacitas he notay be anebtoncfio am e demiry al remaina.
-                    </p>
-                    <button class="read-more-btn">Read Moro</button>
-                </div>
-            </article>
-
-            <!-- Article 3 -->
-            <article class="article-item">
-                <div class="article-image">
-                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=200&fit=crop" alt="Article 3">
-                </div>
-                <div class="article-content">
-                    <div class="article-header">
-                        <h3 class="article-title">The falolk Untuor Wrermed Beene</h3>
-                        <span class="article-date">2022-08</span>
-                    </div>
-                    <p class="article-excerpt">
-                        Thesecridelimigmateillanate toetans Mioturtroomts com isa it eext dvartpion t.initetes corininale et ecmpiuterin ottono and bad or yn to uti perthein.
-                    </p>
-                    <button class="read-more-btn">Read Moro</button>
-                </div>
-            </article>
-
-            <!-- Article 4 -->
-            <article class="article-item">
-                <div class="article-image">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=200&fit=crop" alt="Article 4">
-                </div>
-                <div class="article-content">
-                    <div class="article-header">
-                        <h3 class="article-title">Chentailtet and Diesery Beother</h3>
-                        <span class="article-date">2020 2 07</span>
-                    </div>
-                    <p class="article-excerpt">
-                        Tore beties teeolos cand wortret opeens bondios, aravo dušojomiom tret saandriaent be- nasiecteerdbrotch to niets for the stresiayn a oped belo gore.
-                    </p>
-                    <button class="read-more-btn">Read Moro</button>
-                </div>
-            </article>
+        <div class="article-list" id="articleList">
+            <!-- Loading indicator -->
+            <div class="loading-indicator" id="loadingIndicator">
+                <div class="loading-spinner"></div>
+                <p>加载中...</p>
+            </div>
         </div>
 
         <!-- Pagination -->
-        <div class="pagination">
-            <button class="page-btn prev-btn" disabled>上一页</button>
-            <div class="page-numbers">
-                <button class="page-btn page-number active">1</button>
-                <button class="page-btn page-number">2</button>
-                <button class="page-btn page-number">3</button>
-                <button class="page-btn page-number">4</button>
-                <button class="page-btn page-number">5</button>
-            </div>
-            <button class="page-btn next-btn">下一页</button>
+        <div class="pagination" id="paginationContainer">
+            <div class="page-numbers" id="pageNumbers"></div>
         </div>
     </main>
 
@@ -248,8 +177,23 @@
         </div>
     </div>
 
-    <!-- Watermark -->
-    <div class="watermark">豆包AI生成</div>
+    <!-- Article Detail Modal -->
+    <div class="modal-overlay" id="articleDetailModal">
+        <div class="modal-content article-detail-modal-content">
+            <div class="modal-header">
+                <h2 id="articleDetailTitle">文章详情</h2>
+                <button class="close-btn" id="closeArticleDetailModal">&times;</button>
+            </div>
+            <div class="modal-body article-detail-body">
+                <div class="article-detail-content" id="articleDetailContent">
+                    <div class="article-detail-loading">
+                        <div class="loading-spinner"></div>
+                        <p>加载中...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
